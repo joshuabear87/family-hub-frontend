@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TodoList } from "../types";
-import TodoListCard from "../components/Todo/TodoListCard";
+import TodoListCard from "../components/todo/TodoListCard";
 import { FaPlus } from "react-icons/fa";
-import NewListInput from "../components/Todo/NewListInput";
-import ListDetailModal from "../components/Todo/ListDetailPage";
+import NewListInput from "../components/todo/NewListInput";
+import ListDetailModal from "../components/todo/ListDetailPage";
 import API from "../api/axios";
 
 const TodoPage: React.FC = () => {

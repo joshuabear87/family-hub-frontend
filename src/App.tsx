@@ -7,6 +7,9 @@ import GalleryPage from './pages/GalleryPage';
 import Navbar from './components/Navbar';
 import LoginPage from './pages/LoginPage';
 import CalendarPage from './pages/CalendarPage';
+import MyAccountPage from './pages/MyAccountPage';
+import AdminUserManagementPage from './pages/AdminUserManagementPage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App: React.FC = () => {
   return (
@@ -14,11 +17,13 @@ const App: React.FC = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/todo" element={<TodoPage />} />
-        <Route path="/budget" element={<BudgetPage />} />
-        <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/account" element={<ProtectedRoute><MyAccountPage /></ProtectedRoute>} />
+        <Route path="/admin/users" element={<ProtectedRoute><AdminUserManagementPage /></ProtectedRoute>} />
+        <Route path="/todo" element={<ProtectedRoute><TodoPage /></ProtectedRoute>} />
+        <Route path="/budget" element={<ProtectedRoute><BudgetPage /></ProtectedRoute>} />
+        <Route path="/gallery" element={<ProtectedRoute><GalleryPage /></ProtectedRoute>} />
+        <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
       </Routes>
     </Router>
   );

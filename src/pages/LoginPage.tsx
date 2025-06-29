@@ -1,8 +1,10 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useContext } from 'react';
 import API from '../api/axios';
 import RegisterModal from '../components/RegisterModal';
+import AuthContext from '../context/AuthContext';
 
 const LoginPage: React.FC = () => {
+  const { login } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showRegister, setShowRegister] = useState(false);
@@ -14,7 +16,7 @@ const LoginPage: React.FC = () => {
 
     try {
       const { data } = await API.post('/users/login', { email, password });
-      localStorage.setItem('user', JSON.stringify(data));
+      login(data); // set user context
       window.location.href = '/'; // Redirect to home
     } catch (err: any) {
       console.error(err);

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "ESNext",                 // Use latest JS features
+    "module": "ESNext",                 // Aligns with Vite’s ESM build system
+    "jsx": "react-jsx",                 // Enables React JSX transform without import React
+
+    /* Modules */
+    "moduleResolution": "Node",         // Resolves Node modules
+
+    /* Strict Type Checking */
+    "strict": true,                     // Enables all strict type-checking options
+    "esModuleInterop": true,            // Interop for CommonJS modules
+    "forceConsistentCasingInFileNames": true, // Prevents file case mismatch issues
+
+    /* Skips */
+    "skipLibCheck": true                // Skips type checking of declaration files for speed
+  },
+  "include": ["src"],                   // Includes only your src folder
+  "exclude": ["node_modules"]           // Excludes node_modules
+}

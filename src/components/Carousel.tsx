@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../api/axios'; 
 
 interface GalleryImage {
   _id: string;
@@ -11,22 +11,22 @@ const Carousel: React.FC = () => {
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Fetch gallery images on mount
-useEffect(() => {
-  const fetchImages = async () => {
-    try {
-      const { data } = await axios.get('/api/photos');
-      if (Array.isArray(data)) {
-        setImages(data);
-      } else {
-        console.error('Gallery API did not return an array:', data);
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const { data } = await API.get('/api/photos'); // Use your API instance here
+        if (Array.isArray(data)) {
+          setImages(data);
+        } else {
+          console.error('Gallery API did not return an array:', data);
+        }
+      } catch (error) {
+        console.error('Error fetching gallery images:', error);
       }
-    } catch (error) {
-      console.error('Error fetching gallery images:', error);
-    }
-  };
-  fetchImages();
-}, []);
+    };
+    fetchImages();
+  }, []);
+
 
   // Auto-slide every 5 seconds
   useEffect(() => {

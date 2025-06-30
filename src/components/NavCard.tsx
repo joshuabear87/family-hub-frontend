@@ -1,19 +1,20 @@
-import React, { JSX } from 'react';
+import React from "react";
 
-interface CardProps {
-  icon: JSX.Element;
+interface NavCardProps {
+  icon: string; // emoji or image URL
   label: string;
-  onClick?: () => void;
+  small?: boolean;
 }
 
-const NavCard: React.FC<CardProps> = ({ icon, label, onClick }) => {
+const NavCard: React.FC<NavCardProps> = ({ icon, label, small }) => {
   return (
     <div
-      onClick={onClick}
-      className="flex flex-col items-center justify-center bg-white rounded-lg shadow-md p-6 cursor-pointer hover:scale-105 transform transition duration-200"
+      className={`flex flex-col items-center justify-center bg-white shadow rounded ${
+        small ? "p-1 text-[10px]" : "p-2 text-xs"
+      }`}
     >
-      <div className="text-3xl mb-2">{icon}</div>
-      <div className="text-lg font-medium text-gray-800">{label}</div>
+      <div className={`${small ? "text-base" : "text-xl"}`}>{icon}</div>
+      <span>{label}</span>
     </div>
   );
 };

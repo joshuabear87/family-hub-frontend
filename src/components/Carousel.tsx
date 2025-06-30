@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import API from '../api/axios'; 
+import API from '../api/axios';
 
 interface GalleryImage {
   _id: string;
@@ -14,7 +14,7 @@ const Carousel: React.FC = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const { data } = await API.get('/api/photos'); // Use your API instance here
+        const { data } = await API.get('/api/photos');
         if (Array.isArray(data)) {
           setImages(data);
         } else {
@@ -26,7 +26,6 @@ const Carousel: React.FC = () => {
     };
     fetchImages();
   }, []);
-
 
   // Auto-slide every 5 seconds
   useEffect(() => {
@@ -47,27 +46,30 @@ const Carousel: React.FC = () => {
   const currentImage = images[currentIndex];
 
   return (
-    <div className="relative h-full md:h-64 lg:h-80 overflow-hidden rounded shadow">
-      <img
-  src={currentImage.url}
-  alt={currentImage.caption || 'Gallery image'}
-  className="h-full w-full object-contain object-center mx-auto transition duration-500"
-/>
+    <div className="relative w-full max-w-xs mx-auto rounded-lg overflow-hidden shadow-lg bg-gray-100" style={{ height: '200px' }}>
+      {/* Image container */}
+      <div className="w-full h-full flex items-center justify-center bg-gray-100">
+        <img
+          src={currentImage.url}
+          alt={currentImage.caption || 'Gallery image'}
+          className="max-h-full max-w-full object-contain"
+        />
+      </div>
 
       {/* Caption overlay */}
       {currentImage.caption && (
-        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-center py-2 text-sm">
+        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-center py-1 text-xs">
           {currentImage.caption}
         </div>
       )}
 
       {/* Navigation dots */}
-      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
+      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
         {images.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full ${
+            className={`w-2 h-2 rounded-full ${
               index === currentIndex ? 'bg-white' : 'bg-gray-400'
             }`}
           ></button>

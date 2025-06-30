@@ -16,7 +16,7 @@ const TodoPage: React.FC = () => {
   const fetchLists = async () => {
     try {
       setLoading(true);
-      const { data } = await API.get('/lists');
+      const { data } = await API.get('/api/lists');
       setLists(data);
     } catch (err: any) {
       console.error("Failed to fetch lists:", err.response?.data || err.message);
@@ -33,7 +33,7 @@ const TodoPage: React.FC = () => {
     if (!newListName.trim()) return;
     try {
       setLoading(true);
-      const { data } = await API.post('/lists', { name: newListName.trim() });
+      const { data } = await API.post('/api/lists', { name: newListName.trim() });
       setLists([...lists, data]);
       setNewListName("");
       setShowNewListInput(false);

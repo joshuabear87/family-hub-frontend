@@ -15,7 +15,7 @@ const LoginPage: React.FC = () => {
     setError('');
 
     try {
-      const { data } = await API.post('/users/login', { email, password });
+      const { data } = await API.post('/api/users/login', { email, password });
       login(data); // set user context
       window.location.href = '/'; // Redirect to home
     } catch (err: any) {

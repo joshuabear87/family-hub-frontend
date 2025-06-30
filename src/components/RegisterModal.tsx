@@ -18,7 +18,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ onClose }) => {
     setSuccess('');
 
     try {
-      await API.post('/users/register', { name, email, password });
+      await API.post('/api/users/register', { name, email, password });
       setSuccess('Registration successful! Await admin approval before logging in.');
       setName('');
       setEmail('');

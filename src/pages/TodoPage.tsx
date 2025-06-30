@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { TodoList } from "../types";
 import TodoListCard from "../components/todo/TodoListCard";
-import { FaPlus } from "react-icons/fa";
 import NewListInput from "../components/todo/NewListInput";
 import ListDetailModal from "../components/todo/ListDetailPage";
 import API from "../api/axios";
+import { Plus } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 
 const TodoPage: React.FC = () => {
   const [lists, setLists] = useState<TodoList[]>([]);
@@ -37,7 +38,7 @@ const TodoPage: React.FC = () => {
       setLists([...lists, data]);
       setNewListName("");
       setShowNewListInput(false);
-      setSelectedList(data); // Open detail modal for new list
+      setSelectedList(data); // open new list
     } catch (err: any) {
       console.error("Failed to create list:", err.response?.data || err.message);
     } finally {
@@ -45,22 +46,27 @@ const TodoPage: React.FC = () => {
     }
   };
 
-  return (
-    <div className="mx-4 sm:mx-8 md:mx-20 lg:mx-40 xl:mx-60 py-5">
-      <h1 className="text-3xl mb-4 text-center">Our Lists</h1>
+  const handleToggleInput = () => {
+    if (showNewListInput) setNewListName("");
+    setShowNewListInput(!showNewListInput);
+  };
 
-      {/* + Button */}
-      <div className="flex justify-center my-4">
+  return (
+    <div className="mx-4 sm:mx-8 md:mx-20 lg:mx-40 xl:mx-60 py-5 relative">
+      <h1 className="text-sm mb-4 text-center">Our Lists</h1>
+
+      {/* + Button top-right */}
+      <div className="absolute top-4 right-4">
         <button
-          onClick={() => setShowNewListInput(true)}
-          className="text-green-600 shadow-md text-2xl px-2 py-2 rounded-full hover:bg-green-200"
+          onClick={handleToggleInput}
+          className="text-gray-700 hover:text-black transition"
           disabled={loading}
         >
-          <FaPlus />
+          <Plus size={22} />
         </button>
       </div>
 
-      {/* New List Modal */}
+      {/* New List Input */}
       {showNewListInput && (
         <NewListInput
           newListName={newListName}
@@ -70,7 +76,7 @@ const TodoPage: React.FC = () => {
       )}
 
       {/* Lists Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
         {lists.map((list) => (
           <TodoListCard
             key={list._id}
@@ -80,17 +86,19 @@ const TodoPage: React.FC = () => {
         ))}
       </div>
 
-      {/* List Detail Modal */}
-      {selectedList && (
-        <ListDetailModal
-          list={selectedList} // ✅ Pass list prop here
-          onClose={() => setSelectedList(null)}
-          refreshLists={fetchLists}
-        />
-      )}
+      {/* List Detail Modal with AnimatePresence */}
+      <AnimatePresence>
+        {selectedList && (
+          <ListDetailModal
+            list={selectedList}
+            onClose={() => setSelectedList(null)}
+            refreshLists={fetchLists}
+          />
+        )}
+      </AnimatePresence>
 
       {lists.length === 0 && !loading && (
-        <p className="text-center text-gray-500 mt-4">No lists yet.</p>
+        <p className="text-center text-sm text-gray-500 mt-4">No lists yet...</p>
       )}
     </div>
   );

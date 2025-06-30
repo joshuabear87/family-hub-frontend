@@ -1,4 +1,5 @@
 import React, { useState, FormEvent, useContext } from 'react';
+import { Mail, Lock, LogIn } from 'lucide-react';
 import API from '../api/axios';
 import RegisterModal from '../components/RegisterModal';
 import AuthContext from '../context/AuthContext';
@@ -30,40 +31,47 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center min-h-screen px-2 bg-gray-50">
       <form
         onSubmit={handleLogin}
-        className="bg-white p-6 rounded shadow-md w-full max-w-sm"
+        className="bg-white p-5 rounded shadow-md w-full max-w-xs space-y-3"
       >
-        <h2 className="text-2xl mb-4 text-center">Family Member Login</h2>
+        <h2 className="text-lg font-semibold text-center">Family Member Login</h2>
 
-        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+        {error && <p className="text-red-500 text-xs text-center">{error}</p>}
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 mb-3 w-full"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 mb-3 w-full"
-          required
-        />
+        <div className="flex items-center border rounded px-2 py-1">
+          <Mail size={16} className="text-gray-400 mr-2" />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="text-sm w-full outline-none"
+            required
+          />
+        </div>
+
+        <div className="flex items-center border rounded px-2 py-1">
+          <Lock size={16} className="text-gray-400 mr-2" />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="text-sm w-full outline-none"
+            required
+          />
+        </div>
 
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded w-full"
+          className="flex items-center justify-center bg-blue-500 text-white text-sm px-4 py-2 rounded w-full hover:bg-blue-600 transition"
         >
-          Login
+          <LogIn size={16} className="mr-2" /> Login
         </button>
 
-        <p className="mt-4 text-center">
+        <p className="text-[10px] text-center">
           Don&apos;t have an account?{' '}
           <button
             type="button"

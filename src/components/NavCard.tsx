@@ -9,7 +9,7 @@ interface NavCardProps {
 const NavCard: React.FC<NavCardProps> = ({ icon, label, small }) => {
   return (
     <div
-      className={`flex flex-col items-center justify-center bg-white shadow rounded ${
+      className={`flex flex-col items-center justify-center bg-white shadow-md rounded ${
         small ? "p-1 text-[10px]" : "p-2 text-xs"
       }`}
     >

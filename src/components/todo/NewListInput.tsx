@@ -1,4 +1,5 @@
 import React from "react";
+import { Plus } from "lucide-react";
 
 interface NewListInputProps {
   newListName: string;
@@ -11,7 +12,7 @@ const NewListInput: React.FC<NewListInputProps> = ({
   setNewListName,
   addList,
 }) => (
-  <div className="flex mb-8">
+  <div className="flex items-center space-x-2 mb-4 w-full max-w-xs">
     <input
       type="text"
       value={newListName}
@@ -20,8 +21,13 @@ const NewListInput: React.FC<NewListInputProps> = ({
         if (e.key === "Enter") addList();
       }}
       placeholder="New list name"
-      className="flex-grow border rounded px-3 py-2"
+      className="text-xs border rounded px-2 py-1 w-full outline-none"
     />
+    <button
+      onClick={addList}
+    >
+      <Plus size={18} />
+    </button>
   </div>
 );
 

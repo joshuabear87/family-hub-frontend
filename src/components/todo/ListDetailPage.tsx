@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TodoList, Todo } from '../../types';
 import API from '../../api/axios';
+import { CheckCircle, Circle, Trash2, ArrowLeftCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Props {
   list: TodoList;
@@ -12,6 +14,7 @@ const ListDetailPage: React.FC<Props> = ({ list, onClose, refreshLists }) => {
   const [todos, setTodos] = useState<Todo[]>(list.todos || []);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     setTodos(list.todos || []);
@@ -21,7 +24,7 @@ const ListDetailPage: React.FC<Props> = ({ list, onClose, refreshLists }) => {
     if (!input.trim()) return;
     try {
       setLoading(true);
-      const { data } = await API.post(`/lists/${list._id}/todos`, { text: input.trim() });
+      const { data } = await API.post(`/api/lists/${list._id}/todos`, { text: input.trim() });
       setTodos([...todos, data]);
       setInput('');
       await refreshLists();
@@ -37,7 +40,7 @@ const ListDetailPage: React.FC<Props> = ({ list, onClose, refreshLists }) => {
     if (!todo) return;
     try {
       setLoading(true);
-      const { data } = await API.put(`/todos/${todoId}`, { completed: !todo.completed });
+      const { data } = await API.put(`/api/todos/${todoId}`, { completed: !todo.completed });
       setTodos(todos.map((t) => (t._id === todoId ? data : t)));
       await refreshLists();
     } catch (err: any) {
@@ -51,7 +54,7 @@ const ListDetailPage: React.FC<Props> = ({ list, onClose, refreshLists }) => {
     try {
       setLoading(true);
       const checkedIds = todos.filter((t) => t.completed).map((t) => t._id);
-      await Promise.all(checkedIds.map((id) => API.delete(`/todos/${id}`)));
+      await Promise.all(checkedIds.map((id) => API.delete(`/api/todos/${id}`)));
       setTodos(todos.filter((t) => !t.completed));
       await refreshLists();
     } catch (err: any) {
@@ -63,8 +66,10 @@ const ListDetailPage: React.FC<Props> = ({ list, onClose, refreshLists }) => {
 
   const deleteList = async () => {
     try {
+      setDeleting(true);
+      await new Promise(res => setTimeout(res, 500)); // wait for animation
       setLoading(true);
-      await API.delete(`/lists/${list._id}`);
+      await API.delete(`/api/lists/${list._id}`);
       await refreshLists();
       onClose();
     } catch (err: any) {
@@ -75,60 +80,81 @@ const ListDetailPage: React.FC<Props> = ({ list, onClose, refreshLists }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-white overflow-auto z-50 px-4 py-8">
-      <h2 className="text-3xl font-bold mb-4 text-center">{list.name}</h2>
+    <motion.div
+      initial={{ x: "100%" }}
+      animate={deleting ? { scale: 0.5, rotate: 15, opacity: 0 } : { x: 0 }}
+      exit={{ x: "100%" }}
+      transition={{ duration: 0.3 }}
+      className="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white z-50 shadow-lg lined-paper overflow-y-auto px-4 py-8"
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-2 left-2 text-gray-400 hover:text-gray-600"
+      >
+        <ArrowLeftCircle size={20} />
+      </button>
 
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && addTodo()}
-        placeholder="Add new to-do"
-        className="w-full border rounded px-3 py-2 mb-4"
-        disabled={loading}
-      />
+      <h2 className="text-sm font-semibold mb-3 text-center">{list.name}</h2>
 
-      <ul className="mb-4">
-        {todos.map((todo) => (
-          <li key={todo._id} className="flex items-center mb-2">
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleComplete(todo._id)}
-              className="mr-2"
-              disabled={loading}
-            />
-            <span className={`${todo.completed ? 'line-through text-gray-500' : ''}`}>
-              {todo.text}
-            </span>
-          </li>
-        ))}
+      <div className="flex items-center space-x-2 mb-3">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              addTodo();
+            }
+          }}
+          placeholder="Add new to-do"
+          className="text-xs border rounded px-2 py-1 w-full outline-none"
+          disabled={loading}
+        />
+      </div>
+
+      <ul className="space-y-1">
+        <AnimatePresence>
+          {todos.map((todo) => (
+            <motion.li
+              key={todo._id}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => toggleComplete(todo._id)}
+              className={`flex items-center text-[10px] border-b border-dashed border-gray-300 pb-1 cursor-pointer`}
+            >
+              {todo.completed ? (
+                <CheckCircle size={14} className="mr-1 text-green-600" />
+              ) : (
+                <Circle size={14} className="mr-1 text-black" />
+              )}
+              <span className={`${todo.completed ? 'line-through text-gray-400' : ''}`}>
+                {todo.text}
+              </span>
+            </motion.li>
+          ))}
+        </AnimatePresence>
       </ul>
 
-      <div className="flex justify-between mb-4">
+      <div className="flex justify-between mt-4 space-x-2">
         <button
           onClick={deleteCheckedTodos}
-          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50"
+          className="flex items-center justify-center bg-red-600 text-white text-[10px] px-2 py-1 rounded hover:bg-red-700 disabled:opacity-50 w-1/2"
           disabled={loading}
         >
-          Delete Checked Items
+          <Trash2 size={12} className="mr-1" /> Delete Checked
         </button>
         <button
           onClick={deleteList}
-          className="bg-red-800 text-white px-4 py-2 rounded hover:bg-red-900 disabled:opacity-50"
+          className="flex items-center justify-center bg-red-800 text-white text-[10px] px-2 py-1 rounded hover:bg-red-900 disabled:opacity-50 w-1/2"
           disabled={loading}
         >
-          Delete List
+          <Trash2 size={12} className="mr-1" /> Delete List
         </button>
       </div>
-
-      <button
-        onClick={onClose}
-        className="w-full bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
-      >
-        Back to Lists
-      </button>
-    </div>
+    </motion.div>
   );
 };
 

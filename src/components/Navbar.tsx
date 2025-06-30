@@ -113,84 +113,84 @@ const Navbar: React.FC = () => {
         </div>
       </nav>
 
-      {/* Bottom Navbar for small screens */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur border-t shadow md:hidden flex justify-around items-center py-1 z-50 text-gray-700">
-        <Link to="/" className="flex flex-col items-center text-[10px] hover:text-black transition duration-150">
-          <Home size={18} className="mb-0.5" /> Home
-        </Link>
-        <Link to="/todo" className="flex flex-col items-center text-[10px] hover:text-black transition duration-150">
-          <ListTodo size={18} className="mb-0.5" /> Lists
-        </Link>
-        <Link to="/budget" className="flex flex-col items-center text-[10px] hover:text-black transition duration-150">
-          <DollarSign size={18} className="mb-0.5" /> Budget
-        </Link>
-        <Link to="/gallery" className="flex flex-col items-center text-[10px] hover:text-black transition duration-150">
-          <ImageIcon size={18} className="mb-0.5" /> Gallery
-        </Link>
-        <Link to="/calendar" className="flex flex-col items-center text-[10px] hover:text-black transition duration-150">
-          <Calendar size={18} className="mb-0.5" /> Calendar
-        </Link>
+{/* Bottom Navbar for small screens */}
+<nav className="fixed bottom-0 left-0 right-0 bg-rainbow border-t shadow md:hidden flex justify-around items-center py-1 z-50 text-black">
+  <Link to="/" className="flex flex-col items-center text-[10px] hover:text-gray-100 transition duration-150">
+    <Home size={18} className="mb-0.5" /> Home
+  </Link>
+  <Link to="/todo" className="flex flex-col items-center text-[10px] hover:text-gray-100 transition duration-150">
+    <ListTodo size={18} className="mb-0.5" /> Lists
+  </Link>
+  <Link to="/budget" className="flex flex-col items-center text-[10px] hover:text-gray-100 transition duration-150">
+    <DollarSign size={18} className="mb-0.5" /> Budget
+  </Link>
+  <Link to="/gallery" className="flex flex-col items-center text-[10px] hover:text-gray-100 transition duration-150">
+    <ImageIcon size={18} className="mb-0.5" /> Gallery
+  </Link>
+  <Link to="/calendar" className="flex flex-col items-center text-[10px] hover:text-gray-100 transition duration-150">
+    <Calendar size={18} className="mb-0.5" /> Calendar
+  </Link>
 
-        {/* Mobile Account Menu */}
-        <div className="relative flex flex-col items-center text-[10px]">
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="flex flex-col items-center text-[10px] hover:text-black transition duration-150"
-          >
-            <UserCircle size={18} className="mb-0.5" /> Account
-          </button>
+  {/* Mobile Account Menu */}
+  <div className="relative flex flex-col items-center text-[10px]">
+    <button
+      onClick={() => setMenuOpen(!menuOpen)}
+      className="flex flex-col items-center text-[10px] hover:text-gray-100 transition duration-150"
+    >
+      <UserCircle size={18} className="mb-0.5" /> Account
+    </button>
 
-          {menuOpen && (
-            <div className="absolute bottom-12 right-0 bg-white rounded shadow-lg py-2 w-44 z-50 text-[12px]">
-              {/* Close button */}
-              <button
+    {menuOpen && (
+      <div className="absolute bottom-12 right-0 bg-white rounded shadow-lg py-2 w-44 z-50 text-gray-800 text-[12px]">
+        {/* Close button */}
+        <button
+          onClick={() => setMenuOpen(false)}
+          className="flex items-center justify-end w-full px-4 py-2 text-gray-500 hover:text-black text-xs"
+        >
+          <X size={16} className="mr-2" /> Close
+        </button>
+
+        {isAuthenticated ? (
+          <>
+            <Link
+              to="/account"
+              onClick={() => setMenuOpen(false)}
+              className="block px-4 py-2 hover:bg-gray-100"
+            >
+              My Account
+            </Link>
+            {user?.role === "admin" && (
+              <Link
+                to="/admin/users"
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center justify-end w-full px-4 py-2 text-gray-500 hover:text-black text-xs"
+                className="block px-4 py-2 hover:bg-gray-100"
               >
-                <X size={16} className="mr-2" /> Close
-              </button>
-
-              {isAuthenticated ? (
-                <>
-                  <Link
-                    to="/account"
-                    onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-2 hover:bg-gray-100"
-                  >
-                    My Account
-                  </Link>
-                  {user?.role === "admin" && (
-                    <Link
-                      to="/admin/users"
-                      onClick={() => setMenuOpen(false)}
-                      className="block px-4 py-2 hover:bg-gray-100"
-                    >
-                      <Users size={16} className="inline mr-2" /> Approve Users
-                    </Link>
-                  )}
-                  <button
-                    onClick={() => {
-                      logout();
-                      setMenuOpen(false);
-                    }}
-                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                  >
-                    <LogOut size={16} className="inline mr-2" /> Logout
-                  </button>
-                </>
-              ) : (
-                <Link
-                  to="/login"
-                  onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 hover:bg-gray-100"
-                >
-                  <LogIn size={16} className="inline mr-2" /> Login
-                </Link>
-              )}
-            </div>
-          )}
-        </div>
-      </nav>
+                <Users size={16} className="inline mr-2" /> Approve Users
+              </Link>
+            )}
+            <button
+              onClick={() => {
+                logout();
+                setMenuOpen(false);
+              }}
+              className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+            >
+              <LogOut size={16} className="inline mr-2" /> Logout
+            </button>
+          </>
+        ) : (
+          <Link
+            to="/login"
+            onClick={() => setMenuOpen(false)}
+            className="block px-4 py-2 hover:bg-gray-100"
+          >
+            <LogIn size={16} className="inline mr-2" /> Login
+          </Link>
+        )}
+      </div>
+    )}
+  </div>
+</nav>
     </>
   );
 };

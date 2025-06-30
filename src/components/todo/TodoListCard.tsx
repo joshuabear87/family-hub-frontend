@@ -1,5 +1,6 @@
 import React from 'react';
 import { TodoList } from '../../types';
+import { ListTodo } from 'lucide-react';
 
 interface Props {
   list: TodoList;
@@ -12,19 +13,22 @@ const TodoListCard: React.FC<Props> = ({ list, onClick }) => {
 
   return (
     <div
-      className="bg-white shadow rounded p-4 cursor-pointer hover:bg-gray-50 transition"
+      className="bg-white shadow rounded px-3 py-2 cursor-pointer hover:bg-gray-50 transition w-full"
       onClick={onClick}
     >
-      <h2 className="text-xl font-bold mb-2">{list.name}</h2>
-      <ul>
+      <div className="flex items-center mb-1">
+        <ListTodo size={14} className="text-gray-500 mr-1" />
+        <h2 className="text-sm font-semibold truncate">{list.name}</h2>
+      </div>
+      <ul className="space-y-0.5">
         {displayedTodos.map((todo) => (
-          <li key={todo._id} className="text-sm">
+          <li key={todo._id} className="text-[10px] text-gray-700">
             - {todo.text}
           </li>
         ))}
       </ul>
       {remainingCount > 0 && (
-        <p className="text-xs text-gray-500 mt-2">+{remainingCount} more items</p>
+        <p className="text-[9px] text-gray-400 mt-1">+{remainingCount} more items</p>
       )}
     </div>
   );

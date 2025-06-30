@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import API from '../api/axios';
 import { Expense, Income } from '../types';
-import { FaPlus } from 'react-icons/fa';
+import { Plus } from 'lucide-react';
 
 const BudgetPage: React.FC = () => {
   const [incomes, setIncomes] = useState<Income[]>([]);
@@ -23,7 +23,6 @@ const BudgetPage: React.FC = () => {
   const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
   const remaining = totalIncome - totalExpenses;
 
-  // Fetch incomes and expenses
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -127,39 +126,39 @@ const BudgetPage: React.FC = () => {
 
   return (
     <div className="mx-4 sm:mx-8 md:mx-20 lg:mx-40 xl:mx-60 py-5">
-      <h1 className="text-3xl mb-4 text-center">Family Budget</h1>
+      <h1 className="text-base mb-2 text-center">Family Budget</h1>
 
       {/* Income Section */}
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-2xl font-bold">Incomes</h2>
+          <h2 className="text-sm font-semibold">Incomes</h2>
           <button
             onClick={() => setShowNewIncomeInput(!showNewIncomeInput)}
-            className="text-green-600 text-xl shadow-md p-2 rounded-full hover:bg-green-100 transition-transform transform hover:scale-110"
+            className="text-green-600 shadow-md p-1 rounded-full hover:bg-green-100 transition-transform transform hover:scale-110"
           >
-            <FaPlus />
+            <Plus size={14} />
           </button>
         </div>
 
         {showNewIncomeInput && (
-          <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0 mb-4">
+          <div className="flex flex-col space-y-2 mb-2">
             <input
               type="text"
               value={newIncomeTitle}
               onChange={(e) => setNewIncomeTitle(e.target.value)}
               placeholder="Income title"
-              className="flex-grow border rounded px-3 py-2"
+              className="text-xs border rounded px-2 py-1"
             />
             <input
               type="number"
               value={newIncomeAmount}
               onChange={(e) => setNewIncomeAmount(Number(e.target.value))}
               placeholder="Amount"
-              className="flex-grow border rounded px-3 py-2"
+              className="text-xs border rounded px-2 py-1"
             />
             <button
               onClick={addIncome}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+              className="bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700"
             >
               Add Income
             </button>
@@ -167,23 +166,23 @@ const BudgetPage: React.FC = () => {
         )}
 
         {incomes.map((inc) => (
-          <div key={inc._id} className="flex items-center justify-between mb-2 border-b pb-2">
+          <div key={inc._id} className="flex items-center justify-between mb-1 border-b pb-1">
             <div>
-              <p className="font-semibold">{inc.title}</p>
+              <p className="text-xs font-semibold">{inc.title}</p>
               {inc.locked ? (
-                <p>${inc.amount.toFixed(2)}</p>
+                <p className="text-xs">${inc.amount.toFixed(2)}</p>
               ) : (
                 <input
                   type="number"
                   value={inc.amount}
                   onChange={(e) => editIncomeAmount(inc._id, Number(e.target.value))}
-                  className="border rounded px-2 py-1"
+                  className="text-xs border rounded px-2 py-1"
                 />
               )}
             </div>
             <button
               onClick={() => toggleLockIncome(inc._id)}
-              className="text-sm px-2 py-1 rounded bg-gray-300 hover:bg-gray-400"
+              className="text-[10px] px-2 py-1 rounded bg-gray-300 hover:bg-gray-400"
             >
               {inc.locked ? 'Unlock' : 'Lock'}
             </button>
@@ -192,7 +191,7 @@ const BudgetPage: React.FC = () => {
       </div>
 
       {/* Summary */}
-      <div className="mb-8">
+      <div className="mb-6 text-xs">
         <p>Total Income: ${totalIncome.toFixed(2)}</p>
         <p>Total Expenses: ${totalExpenses.toFixed(2)}</p>
         <p className={`${remaining < 0 ? 'text-red-600' : 'text-green-600'}`}>
@@ -201,43 +200,43 @@ const BudgetPage: React.FC = () => {
       </div>
 
       {/* Expenses Section */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold">Expenses</h2>
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-sm font-semibold">Expenses</h2>
           <button
             onClick={() => setShowNewExpenseInput(!showNewExpenseInput)}
-            className="text-red-600 text-xl shadow-md p-2 rounded-full hover:bg-red-100 transition-transform transform hover:scale-110"
+            className="text-red-600 shadow-md p-1 rounded-full hover:bg-red-100 transition-transform transform hover:scale-110"
           >
-            <FaPlus />
+            <Plus size={14} />
           </button>
         </div>
 
         {showNewExpenseInput && (
-          <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0 mb-4">
+          <div className="flex flex-col space-y-2 mb-2">
             <input
               type="text"
               value={newCategory}
               onChange={(e) => setNewCategory(e.target.value)}
               placeholder="Category"
-              className="flex-grow border rounded px-3 py-2"
+              className="text-xs border rounded px-2 py-1"
             />
             <input
               type="text"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
               placeholder="Title"
-              className="flex-grow border rounded px-3 py-2"
+              className="text-xs border rounded px-2 py-1"
             />
             <input
               type="number"
               value={newAmount}
               onChange={(e) => setNewAmount(Number(e.target.value))}
               placeholder="Amount"
-              className="flex-grow border rounded px-3 py-2"
+              className="text-xs border rounded px-2 py-1"
             />
             <button
               onClick={addExpense}
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              className="bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700"
             >
               Add Expense
             </button>
@@ -246,31 +245,31 @@ const BudgetPage: React.FC = () => {
 
         {/* Expenses Table */}
         <div className="overflow-x-auto">
-          <table className="min-w-full border text-left">
+          <table className="min-w-full border text-left text-xs">
             <thead className="bg-gray-100">
               <tr>
-                <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('category')}>
+                <th className="px-2 py-1 border cursor-pointer" onClick={() => handleSort('category')}>
                   Category {sortField === 'category' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                 </th>
-                <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('title')}>
+                <th className="px-2 py-1 border cursor-pointer" onClick={() => handleSort('title')}>
                   Title {sortField === 'title' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                 </th>
-                <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('amount')}>
+                <th className="px-2 py-1 border cursor-pointer" onClick={() => handleSort('amount')}>
                   Amount {sortField === 'amount' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                 </th>
-                <th className="px-4 py-2 border">Actions</th>
+                <th className="px-2 py-1 border">Actions</th>
               </tr>
             </thead>
             <tbody>
               {sortedExpenses.map((exp) => (
                 <tr key={exp._id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 border">{exp.category}</td>
-                  <td className="px-4 py-2 border">{exp.title}</td>
-                  <td className="px-4 py-2 border">${exp.amount.toFixed(2)}</td>
-                  <td className="px-4 py-2 border">
+                  <td className="px-2 py-1 border">{exp.category}</td>
+                  <td className="px-2 py-1 border">{exp.title}</td>
+                  <td className="px-2 py-1 border">${exp.amount.toFixed(2)}</td>
+                  <td className="px-2 py-1 border">
                     <button
                       onClick={() => deleteExpense(exp._id)}
-                      className="text-red-600 hover:text-red-800"
+                      className="text-red-600 hover:text-red-800 text-[10px]"
                     >
                       Delete
                     </button>
@@ -279,7 +278,7 @@ const BudgetPage: React.FC = () => {
               ))}
               {sortedExpenses.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="text-center py-4 text-gray-500">
+                  <td colSpan={4} className="text-center py-2 text-gray-500 text-[10px]">
                     No expenses found.
                   </td>
                 </tr>

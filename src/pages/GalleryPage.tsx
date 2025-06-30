@@ -47,7 +47,7 @@ const GalleryPage: React.FC = () => {
       formData.append("image", selectedFile);
       formData.append("title", title.trim());
 
-      const { data } = await API.post("/photos", formData, {
+      const { data } = await API.post("/api/photos", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -65,7 +65,7 @@ const GalleryPage: React.FC = () => {
   const handleDelete = async (id: string) => {
     try {
       setLoading(true);
-      await API.delete(`/photos/${id}`);
+      await API.delete(`/api/photos/${id}`);
       setPhotos(photos.filter((photo) => photo._id !== id));
       setEditPhoto(null);
     } catch (err: any) {
@@ -80,7 +80,7 @@ const GalleryPage: React.FC = () => {
 
     try {
       setLoading(true);
-      const { data } = await API.put(`/photos/${editPhoto._id}`, { title: editPhoto.title });
+      const { data } = await API.put(`/api/photos/${editPhoto._id}`, { title: editPhoto.title });
       setPhotos(photos.map((p) => (p._id === data._id ? data : p)));
       setEditPhoto(null);
     } catch (err: any) {

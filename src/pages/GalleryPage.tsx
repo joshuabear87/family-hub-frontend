@@ -22,7 +22,7 @@ const GalleryPage: React.FC = () => {
     const fetchPhotos = async () => {
       try {
         setLoading(true);
-        const { data } = await API.get("/photos");
+        const { data } = await API.get("/api/photos");
         setPhotos(data);
       } catch (err: any) {
         console.error("Failed to fetch photos:", err.response?.data || err.message);

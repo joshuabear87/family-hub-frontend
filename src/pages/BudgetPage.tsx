@@ -27,9 +27,9 @@ const BudgetPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const incomeRes = await API.get('/incomes');
+        const incomeRes = await API.get('/api/incomes');
         setIncomes(incomeRes.data);
-        const expenseRes = await API.get('/budgets');
+        const expenseRes = await API.get('/api/budgets');
         setExpenses(expenseRes.data);
       } catch (err: any) {
         console.error('Failed to fetch data:', err.response?.data || err.message);
@@ -42,7 +42,7 @@ const BudgetPage: React.FC = () => {
     if (!newIncomeTitle.trim() || newIncomeAmount === '') return;
 
     try {
-      const { data } = await API.post('/incomes', {
+      const { data } = await API.post('/api/incomes', {
         title: newIncomeTitle.trim(),
         amount: Number(newIncomeAmount),
       });
@@ -60,7 +60,7 @@ const BudgetPage: React.FC = () => {
     if (!income) return;
 
     try {
-      const { data } = await API.put(`/incomes/${id}`, {
+      const { data } = await API.put(`/api/incomes/${id}`, {
         locked: !income.locked,
       });
       setIncomes(incomes.map((i) => (i._id === id ? data : i)));
@@ -71,7 +71,7 @@ const BudgetPage: React.FC = () => {
 
   const editIncomeAmount = async (id: string, amount: number) => {
     try {
-      const { data } = await API.put(`/incomes/${id}`, { amount });
+      const { data } = await API.put(`/api/incomes/${id}`, { amount });
       setIncomes(incomes.map((i) => (i._id === id ? data : i)));
     } catch (err: any) {
       console.error('Failed to update amount:', err.response?.data || err.message);
@@ -82,7 +82,7 @@ const BudgetPage: React.FC = () => {
     if (!newTitle.trim() || !newCategory.trim() || newAmount === '') return;
 
     try {
-      const { data } = await API.post('/budgets', {
+      const { data } = await API.post('/api/budgets', {
         title: newTitle.trim(),
         amount: Number(newAmount),
         category: newCategory.trim(),
@@ -99,7 +99,7 @@ const BudgetPage: React.FC = () => {
 
   const deleteExpense = async (id: string) => {
     try {
-      await API.delete(`/budgets/${id}`);
+      await API.delete(`/api/budgets/${id}`);
       setExpenses(expenses.filter((exp) => exp._id !== id));
     } catch (err: any) {
       console.error('Failed to delete expense:', err.response?.data || err.message);

@@ -1,169 +1,105 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import AuthContext from '../context/AuthContext';
+import React, { useEffect, useState, useContext } from "react";
+import API from "../api/axios";
+import AuthContext from "../context/AuthContext";
 
 interface User {
   _id: string;
   name: string;
   email: string;
+  role: string;
   approved: boolean;
-  role: 'user' | 'admin';
 }
 
 const AdminUserManagementPage: React.FC = () => {
-  const { user, isAuthenticated } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const { data } = await axios.get('/api/users');
-        console.log('Fetched data:', data);
-        setUsers(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, []);
+  const fetchUsers = async () => {
+    try {
+      const { data } = await API.get("/api/users");
+      setUsers(data);
+    } catch (err: any) {
+      console.error("Failed to fetch users:", err.response?.data || err.message);
+    }
+  };
 
   const approveUser = async (id: string) => {
     try {
-      await axios.put(`/api/users/${id}/approve`);
-      setUsers((prev) =>
-        prev.map((u) => (u._id === id ? { ...u, approved: true } : u))
-      );
-    } catch (error) {
-      console.error(error);
+      await API.put(`/api/users/${id}/approve`);
+      fetchUsers();
+    } catch (err: any) {
+      console.error("Failed to approve user:", err.response?.data || err.message);
     }
   };
 
   const deleteUser = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this user?')) return;
+    if (!window.confirm("Delete this user?")) return;
     try {
-      await axios.delete(`/api/users/${id}`);
-      setUsers((prev) => prev.filter((u) => u._id !== id));
-    } catch (error) {
-      console.error(error);
+      await API.delete(`/api/users/${id}`);
+      fetchUsers();
+    } catch (err: any) {
+      console.error("Failed to delete user:", err.response?.data || err.message);
     }
   };
 
-  const updateRole = async (id: string, newRole: 'user' | 'admin') => {
+  const updateRole = async (id: string, role: string) => {
     try {
-      await axios.put(`/api/users/${id}/role`, { role: newRole });
-      setUsers((prev) =>
-        prev.map((u) => (u._id === id ? { ...u, role: newRole } : u))
-      );
-    } catch (error) {
-      console.error(error);
+      await API.put(`/api/users/${id}/role`, { role });
+      fetchUsers();
+    } catch (err: any) {
+      console.error("Failed to update role:", err.response?.data || err.message);
     }
   };
 
-  if (!isAuthenticated || user?.role !== 'admin') {
-    return <div className="p-4">You are not authorized to view this page.</div>;
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  if (!user || user.role !== "admin") {
+    return <p className="p-4">Unauthorized. Admins only.</p>;
   }
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl mb-4">Manage Users</h1>
-      {loading ? (
-        <p>Loading users...</p>
+      <h1 className="text-2xl font-bold mb-4">Admin User Management</h1>
+      {users.length === 0 ? (
+        <p>No users found.</p>
       ) : (
-        <>
-          {/* Table view for md+ screens */}
-          <div className="hidden md:block">
-            <table className="min-w-full bg-white shadow rounded">
-              <thead>
-                <tr>
-                  <th className="py-2 px-4 border">Name</th>
-                  <th className="py-2 px-4 border">Email</th>
-                  <th className="py-2 px-4 border">Approved</th>
-                  <th className="py-2 px-4 border">Role</th>
-                  <th className="py-2 px-4 border">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((u) => (
-                  <tr key={u._id}>
-                    <td className="py-2 px-4 border">{u.name}</td>
-                    <td className="py-2 px-4 border">{u.email}</td>
-                    <td className="py-2 px-4 border">{u.approved ? 'Yes' : 'No'}</td>
-                    <td className="py-2 px-4 border">{u.role}</td>
-                    <td className="py-2 px-4 border space-x-2">
-                      {!u.approved && (
-                        <button
-                          onClick={() => approveUser(u._id)}
-                          className="bg-green-500 text-white px-2 py-1 rounded"
-                        >
-                          Approve
-                        </button>
-                      )}
-                      <button
-                        onClick={() =>
-                          updateRole(u._id, u.role === 'admin' ? 'user' : 'admin')
-                        }
-                        className="bg-yellow-500 text-white px-2 py-1 rounded"
-                      >
-                        {u.role === 'admin' ? 'Demote' : 'Promote'}
-                      </button>
-                      <button
-                        onClick={() => deleteUser(u._id)}
-                        className="bg-red-500 text-white px-2 py-1 rounded"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="space-y-4">
+          {users.map((user) => (
+            <div key={user._id} className="bg-white shadow rounded p-4">
+              <p><strong>Name:</strong> {user.name}</p>
+              <p><strong>Email:</strong> {user.email}</p>
+              <p><strong>Role:</strong> {user.role}</p>
+              <p><strong>Approved:</strong> {user.approved ? "Yes" : "No"}</p>
 
-          {/* Card view for mobile screens */}
-          <div className="md:hidden space-y-4">
-            {users.map((u) => (
-              <div key={u._id} className="bg-white shadow rounded p-4">
-                <p className="font-bold">{u.name}</p>
-                <p className="text-sm text-gray-600">{u.email}</p>
-                <p className="mt-1">
-                  <span className="font-semibold">Approved:</span> {u.approved ? 'Yes' : 'No'}
-                </p>
-                <p>
-                  <span className="font-semibold">Role:</span> {u.role}
-                </p>
+              {!user.approved && (
+                <button
+                  onClick={() => approveUser(user._id)}
+                  className="bg-green-600 text-white px-4 py-2 rounded mr-2 hover:bg-green-700"
+                >
+                  Approve
+                </button>
+              )}
 
-                <div className="mt-3 space-y-2">
-                  {!u.approved && (
-                    <button
-                      onClick={() => approveUser(u._id)}
-                      className="w-full bg-green-500 text-white px-2 py-1 rounded"
-                    >
-                      Approve
-                    </button>
-                  )}
-                  <button
-                    onClick={() =>
-                      updateRole(u._id, u.role === 'admin' ? 'user' : 'admin')
-                    }
-                    className="w-full bg-yellow-500 text-white px-2 py-1 rounded"
-                  >
-                    {u.role === 'admin' ? 'Demote' : 'Promote'}
-                  </button>
-                  <button
-                    onClick={() => deleteUser(u._id)}
-                    className="w-full bg-red-500 text-white px-2 py-1 rounded"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
+              <button
+                onClick={() => deleteUser(user._id)}
+                className="bg-red-600 text-white px-4 py-2 rounded mr-2 hover:bg-red-700"
+              >
+                Delete
+              </button>
+
+              <select
+                value={user.role}
+                onChange={(e) => updateRole(user._id, e.target.value)}
+                className="border px-2 py-1 rounded"
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

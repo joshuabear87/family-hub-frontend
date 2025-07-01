@@ -6,12 +6,12 @@ import { motion } from "framer-motion";
 
 const Home: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen pt-5 pb-20 px-2">
+    <div className="flex flex-col items-center justify-between min-h-screen pt-5 pb-20 px-4">
       {/* Family Logo */}
       <motion.img
         src="/logo.png"
         alt="Family Crest"
-        className="w-10 h-10 rounded-full shadow-md"
+        className="w-14 h-14 rounded-full shadow-md mb-2"
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.5 }}
@@ -19,7 +19,7 @@ const Home: React.FC = () => {
 
       {/* Title */}
       <motion.h1
-        className="text-base text-gray-800 text-center leading-tight"
+        className="text-lg font-semibold text-gray-800 text-center leading-tight mb-2"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
@@ -29,7 +29,7 @@ const Home: React.FC = () => {
 
       {/* Carousel Preview */}
       <motion.div
-        className="w-full max-w-xs rounded-lg overflow-hidden"
+        className="w-full max-w-sm rounded-lg overflow-hidden mb-2"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.6 }}
@@ -39,7 +39,7 @@ const Home: React.FC = () => {
 
       {/* Footer Quote */}
       <motion.p
-        className="text-[10px] text-gray-600 text-center"
+        className="text-xs text-gray-600 text-center mb-4"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.9 }}
@@ -49,7 +49,7 @@ const Home: React.FC = () => {
 
       {/* Quick Nav Cards */}
       <motion.div
-        className="grid grid-cols-2 gap-5 w-50 max-w-xs"
+        className="grid grid-cols-2 gap-4 w-full max-w-sm"
         initial="hidden"
         animate="visible"
         variants={{

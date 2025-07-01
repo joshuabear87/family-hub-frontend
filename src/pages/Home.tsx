@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 const Home: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen pt-5 pb-20 px-4">
+    <div className="flex flex-col items-center justify-between min-h-screen pt-5 pb-45 px-4">
       {/* Family Logo */}
       <motion.img
         src="/logo.png"
@@ -19,7 +19,7 @@ const Home: React.FC = () => {
 
       {/* Title */}
       <motion.h1
-        className="text-lg font-semibold text-gray-800 text-center leading-tight mb-2"
+        className="text-xl text-gray-800 text-center leading-tight mb-2"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}

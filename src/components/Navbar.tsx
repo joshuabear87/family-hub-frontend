@@ -114,7 +114,7 @@ const Navbar: React.FC = () => {
       </nav>
 
 {/* Bottom Navbar for small screens */}
-<nav className="fixed bottom-0 left-0 right-0 bg-rainbow border-t shadow md:hidden flex justify-around items-center py-1 z-50 text-black">
+<nav className="fixed h-25 bottom-0 left-0 right-0 bg-rainbow shadow-md md:hidden flex justify-around items-top py-3 z-50 text-black">
   <Link to="/" className="flex flex-col items-center text-[10px] hover:text-gray-100 transition duration-150">
     <Home size={18} className="mb-0.5" /> Home
   </Link>
